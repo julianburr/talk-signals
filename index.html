@@ -1,0 +1,31 @@
+<p>
+  <button id="one">Counter 1: <span id="valueone">0</span></button>
+  <button id="two">Counter 2: <span id="valuetwo">0</span></button>
+  <button id="both">Increase both</button>
+</p>
+
+<p>Sum: <span id="sum">0</span></p>
+<p>Parity: <span id="parity">even</span></p>
+
+<script type="module">
+  import { signal, computed, effect } from "./signal.js";
+
+  const count1 = signal(0);
+  const count2 = signal(0);
+  const sum = computed(() => count1.get() + count2.get());
+  const parity = computed(() => (sum.get() % 2 === 0 ? "even" : "odd"));
+
+  window.one.onclick = () => count1.set(count1.get() + 1);
+  window.two.onclick = () => count2.set(count2.get() + 1);
+  window.both.onclick = () => {
+    count1.set(count1.get() + 1);
+    count2.set(count2.get() + 1);
+  };
+
+  effect(() => (window.valueone.textContent = count1.get()));
+  effect(() => (window.valuetwo.textContent = count2.get()));
+  effect(() => (window.sum.textContent = sum.get()));
+  effect(() => (window.parity.textContent = parity.get()));
+
+  effect(() => console.log({ parity: parity.get() }));
+</script>
